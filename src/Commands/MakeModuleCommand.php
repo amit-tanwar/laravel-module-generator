@@ -24,6 +24,7 @@ class MakeModuleCommand extends Command
 
         $folders = [
             'Controllers',
+            'Controllers/Apis',
             'Services',
             'Models',
             'Registry',
@@ -43,7 +44,7 @@ class MakeModuleCommand extends Command
         $this->createRoutes($modulePath);
         $this->createConfig($modulePath);
         $this->createModels($parts, $modulePath);
-        $this->creatControllers($parts, $modulePath);
+        $this->createControllers($parts, $modulePath);
 
         $this->info("Module {$name} created successfully.");
     }
@@ -128,7 +129,7 @@ class {$moduleName} extends BaseModel{
         File::put($modulePath . "/Models/{$moduleName}.php", $content);
     }
 
-    protected function creatControllers($parts, $modulePath){
+    protected function createControllers($parts, $modulePath){
 
         $moduleName = end($parts) . 'Controller';
         $namespace = 'App\\Modules\\' . implode('\\', $parts) . '\\Controllers\Apis';
