@@ -1,0 +1,21 @@
+{
+    "name": "webduo/laravel-module-generator",
+    "description": "Laravel Module Generator",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "WebDuo\\LaravelModuleGenerator\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "WebDuo\\LaravelModuleGenerator\\ModuleGeneratorServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^8.1"
+    }
+}
