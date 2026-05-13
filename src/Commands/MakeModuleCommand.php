@@ -54,6 +54,8 @@ class MakeModuleCommand extends Command
         $moduleName = end($parts);
         $namespace = 'App\\Modules\\' . implode('\\', $parts) . '\\Providers';
 
+        $module_slug = strtolower($moduleName);
+
         $content = "<?php
 namespace {$namespace};
 
@@ -68,7 +70,7 @@ class {$moduleName}ServiceProvider extends ServiceProvider{
 
             \$this->mergeConfigFrom(
                 __DIR__ . '/../Config/config.php',
-                'modules.cms'
+                'modules.$module_slug'
             );
         }
 
@@ -138,10 +140,9 @@ class {$moduleName} extends BaseModel{
 namespace {$namespace};
 
 use App\Modules\Base\Controllers\Apis\BaseController;
+use Illuminate\Http\Request;
 
 class {$moduleName} extends BaseController{
-
-    protected \$table = 'TABLE_NAME';
 
     function __construct(){
 
