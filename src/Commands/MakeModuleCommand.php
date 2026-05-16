@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\File;
 
 class MakeModuleCommand extends Command
 {
-    protected $signature = 'make:module {name}';
+    protected $signature = 'make:module {name} --create=* : Create migration tables}';
     protected $description = 'Create a new module';
 
     public function handle()
@@ -45,6 +45,7 @@ class MakeModuleCommand extends Command
         $this->createConfig($modulePath);
         $this->createModels($parts, $modulePath);
         $this->createControllers($parts, $modulePath);
+        $this->createMigrations($modulePath);
 
         $this->info("Module {$name} created successfully.");
     }
@@ -91,6 +92,10 @@ class {$moduleName}ServiceProvider extends ServiceProvider{
         Route::middleware('api')
             ->prefix('api')
             ->group(__DIR__ . '/../Routes/api.php');
+
+        \$this->loadMigrationsFrom(
+            __DIR__ . '/../Database/Migrations'
+        );
     }
 }";
 
@@ -161,5 +166,62 @@ class {$moduleName} extends BaseController{
 
         File::put($modulePath . '/Config/config.php', "<?php\n\nreturn [];\n");
         File::put($modulePath . '/Config/app_handle.php', "<?php\n\nreturn [];\n");
+    }
+
+    protected function createMigrations($modulePath){
+
+        $tables = $this->option('create');
+
+        if(empty($tables)){
+        
+            return;
+        }
+
+        $migrationPath = $modulePath . '/Database/Migrations';
+
+        foreach($tables as $table){
+
+            $migrationName = 'create_' . $table . '_table';
+
+            $timestamp = now()->format('Y_m_d_His');
+
+            $filename = $timestamp . '_' . $migrationName . '.php';
+
+            sleep(1);
+
+            $content = $this->getMigrationStub($table);
+
+            file_put_contents(
+                $migrationPath . '/' . $filename,
+                $content
+            );
+        }
+    }
+
+    protected function getMigrationStub($table){
+
+        return "<?php
+
+use Illuminate\\Database\\Migrations\\Migration;
+use Illuminate\\Database\\Schema\\Blueprint;
+use Illuminate\\Support\\Facades\\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('{$table}', function (Blueprint \$table) {
+            \$table->id();
+            \$table->string('row_id');
+            \$table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('{$table}');
+    }
+};
+";
     }
 }
