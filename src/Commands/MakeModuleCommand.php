@@ -6,7 +6,12 @@ use Illuminate\Support\Facades\File;
 
 class MakeModuleCommand extends Command
 {
-    protected $signature = 'make:module {name} --create=* : Create migration tables}';
+    protected $signature = '
+        make:module
+        {name}
+        --create=* : Create migration tables}
+    ';
+    
     protected $description = 'Create a new module';
 
     public function handle()
